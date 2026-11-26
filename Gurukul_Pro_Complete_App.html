@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GURUKUL PRO - Coaching & AI Suite (Class 1–12)</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #0f172a;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #1e293b;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            padding-bottom: 85px;
+        }
+        header {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: #fff;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .top-bar h1 {
+            font-size: 1.05rem;
+            letter-spacing: 0.4px;
+        }
+        .role-switch {
+            display: flex;
+            background: rgba(255,255,255,0.16);
+            border-radius: 20px;
+            padding: 3px;
+        }
+        .role-btn {
+            border: none;
+            background: transparent;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .role-btn.active {
+            background: #fff;
+            color: var(--primary);
+        }
+        .container {
+            padding: 14px;
+            max-width: 720px;
+            margin: auto;
+        }
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+        }
+        .card h3 {
+            font-size: 0.98rem;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .stat-box {
+            background: #fff;
+            padding: 10px 8px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .stat-box h2 {
+            font-size: 1.15rem;
+            color: var(--primary);
+        }
+        .stat-box p {
+            font-size: 0.72rem;
+            color: #64748b;
+            margin-top: 2px;
+        }
+        .btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 8px;
+        }
+        .btn-success { background: var(--accent); }
+        .btn-danger { background: var(--danger); }
+        .btn-sm {
+            width: auto;
+            padding: 6px 10px;
+            font-size: 0.76rem;
+            margin-top: 0;
+        }
+        input, select {
+            width: 100%;
+            padding: 9px 10px;
+            margin: 6px 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            background: #fff;
+        }
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+            gap: 10px;
+        }
+        .list-item:last-child { border-bottom: none; }
+        .badge {
+            background: #e0e7ff;
+            color: var(--primary);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .badge-special {
+            background: #fef3c7;
+            color: #b45309;
+        }
+        .section { display: none; }
+        .section.active { display: block; }
+        .log-box {
+            background: #0f172a;
+            color: #38bdf8;
+            font-family: monospace;
+            font-size: 0.75rem;
+            padding: 10px;
+            border-radius: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+            line-height: 1.5;
+        }
+        .ai-fab {
+            position: fixed;
+            bottom: 72px;
+            right: 16px;
+            background: linear-gradient(135deg, #ec4899, #8b5cf6);
+            color: #fff;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4);
+            cursor: pointer;
+            z-index: 150;
+        }
+        .ai-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.65);
+            z-index: 200;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .ai-modal.open { display: flex; }
+        .ai-box {
+            background: #fff;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 18px 18px 0 0;
+            padding: 14px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .ai-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .ai-chat {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 0;
+            max-height: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .msg {
+            padding: 10px 12px;
+            border-radius: 12px;
+            max-width: 85%;
+            font-size: 0.85rem;
+            line-height: 1.45;
+        }
+        .msg.ai {
+            background: #f1f5f9;
+            color: var(--text);
+            align-self: flex-start;
+        }
+        .msg.user {
+            background: var(--primary);
+            color: #fff;
+            align-self: flex-end;
+        }
+        .ai-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            align-items: center;
+        }
+        .mic-btn {
+            background: #ec4899;
+            color: #fff;
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .mic-btn.listening {
+            background: var(--danger);
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.12); }
+            100% { transform: scale(1); }
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #fff;
+            display: flex;
+            border-top: 1px solid #e2e8f0;
+            z-index: 120;
+        }
+        .nav-item {
+            flex: 1;
+            border: none;
+            background: none;
+            padding: 12px 6px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+        }
+        .nav-item.active {
+            color: var(--primary);
+            border-top: 3px solid var(--primary);
+        }
+        .security-bar {
+            background: #0f172a;
+            color: #10b981;
+            font-size: 0.72rem;
+            padding: 4px 12px;
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .pin-lock-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.92);
+            z-index: 300;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .pin-lock-overlay.open { display: flex; }
+        .pin-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 14px;
+            width: 100%;
+            max-width: 340px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+<div class="security-bar">🛡️ GURUKUL SHIELD ACTIVE • Encrypted Session & Admin PIN Guard</div>
+
+<!-- Admin PIN Lock Modal -->
+<div class="pin-lock-overlay" id="adminPinModal">
+    <div class="pin-box">
+        <h3 style="margin-bottom:6px;">🔐 एडमिन सुरक्षा लॉक</h3>
+        <p style="font-size:0.82rem; color:#64748b; margin-bottom:10px;">एडमिन & AI स्टूडियो खोलने के लिए 4-अंकों का PIN डालें (डिफ़ॉल्ट PIN: <b>1234</b>)</p>
+        <input type="password" id="adminPinInput" maxlength="4" placeholder="••••" style="text-align:center; font-size:1.2rem; letter-spacing:6px;">
+        <p id="pinErrorMsg" style="color:#ef4444; font-size:0.78rem; margin-top:4px; display:none;">❌ गलत PIN! पुनः प्रयास करें।</p>
+        <div style="display:flex; gap:8px; margin-top:10px;">
+            <button class="btn" style="background:#64748b; margin-top:0;" onclick="closePinModal()">रद्द करें</button>
+            <button class="btn btn-success" style="margin-top:0;" onclick="verifyAdminPin()">अनलॉक करें</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================= HEADER ================= -->
+<header class="top-bar">
+    <div class="brand">
+        <h1>🎓 GURUKUL PRO (1–12)</h1>
+    </div>
+    <div class="role-switch">
+        <button class="role-btn active" id="btnStudentRole" onclick="switchRole('student')">स्टूडेंट</button>
+        <button class="role-btn" id="btnAdminRole" onclick="requestAdminAccess()">🔒 एडमिन & AI स्टूडियो</button>
+    </div>
+</header>
+
+<!-- ================= STUDENT VIEW START ================= -->
+<div id="studentView" class="container">
+    <div id="tabHome" class="section active">
+        <div class="card" style="background:linear-gradient(135deg,#4f46e5,#7c3aed); color:#fff;">
+            <h3 style="color:#fff;">स्वागत है, छात्र! 👋 <span class="badge" style="background:#fff; color:#4f46e5;">10th & 12th Special</span></h3>
+            <p style="font-size:0.84rem; opacity:0.95;">कक्षा 1 से 12 तक संपूर्ण पढ़ाई, हेड टीचर की लाइव YouTube क्लासेस और AI ट्यूटर सहायता।</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box"><h2>92%</h2><p>अटेंडेंस</p></div>
+            <div class="stat-box"><h2 id="courseCount">6</h2><p>एक्टिव बैच</p></div>
+            <div class="stat-box"><h2>A+</h2><p>टेस्ट रैंक</p></div>
+        </div>
+
+        <div class="card" style="border-left:4px solid #f59e0b;">
+            <h3>📢 लाइव नोटिस बोर्ड</h3>
+            <p id="liveNotice" style="font-size:0.84rem; color:#334155;">आज शाम 5:00 PM पर कक्षा 10वीं और 12वीं के लिए हेड टीचर की विशेष बोर्ड लाइव क्लास होगी।</p>
+        </div>
+
+        <div class="card">
+            <h3>📚 सभी कोर्सेज (कक्षा 1 से 12)</h3>
+            <select id="studentClassFilter" onchange="renderStudentCourses()">
+                <option value="ALL">सभी कक्षाएं दिखाएं (1–12)</option>
+                <option value="SPECIAL">विशेष बैच (10वीं & 12वीं बोर्ड)</option>
+                <option value="12">कक्षा 12 (विशेष कोचिंग)</option>
+                <option value="10">कक्षा 10 (विशेष कोचिंग)</option>
+                <option value="6-9">कक्षा 6 से 9</option>
+                <option value="1-5">कक्षा 1 से 5</option>
+            </select>
+            <div id="studentCourseList"></div>
+        </div>
+
+        <div class="card">
+            <h3>🎬 हेड टीचर YouTube लेक्चर & Instagram रील्स</h3>
+            <div id="studentVideoFeed"></div>
+        </div>
+    </div>
+
+    <div id="tabQuiz" class="section">
+        <div class="card">
+            <h3>📝 डेली बोर्ड प्रैक्टिस क्विज़</h3>
+            <p style="font-size:0.85rem; margin-bottom:8px;"><strong>प्रश्न:</strong> प्रकाश संश्लेषण (Photosynthesis) के दौरान पौधे कौन-सी गैस छोड़ते हैं?</p>
+            <button class="btn" style="background:#f8fafc; color:#1e293b; border:1px solid #cbd5e1; text-align:left;" onclick="checkQuiz(false)">A) कार्बन डाइऑक्साइड (CO2)</button>
+            <button class="btn" style="background:#f8fafc; color:#1e293b; border:1px solid #cbd5e1; text-align:left;" onclick="checkQuiz(true)">B) ऑक्सीजन (O2)</button>
+            <button class="btn" style="background:#f8fafc; color:#1e293b; border:1px solid #cbd5e1; text-align:left;" onclick="checkQuiz(false)">C) नाइट्रोजन (N2)</button>
+            <p id="quizFeedback" style="margin-top:10px; font-size:0.84rem; font-weight:700;"></p>
+        </div>
+
+        <div class="card">
+            <h3>💳 कोचिंग फीस स्टेटस</h3>
+            <div class="list-item">
+                <div>
+                    <strong>पिछली किस्त (Paid)</strong><br>
+                    <small style="color:#64748b;">कक्षा 1–12 / स्पेशल बैच</small>
+                </div>
+                <span class="badge" style="background:#dcfce7; color:#15803d;">✔ जमा (Paid)</span>
+            </div>
+            <div class="list-item">
+                <div>
+                    <strong>वर्तमान माह फीस</strong><br>
+                    <small style="color:#64748b;">ऑनलाइन रसीद उपलब्ध</small>
+                </div>
+                <button class="btn btn-sm" onclick="alert('✅ फीस पेमेंट गेटवे खुल रहा है...')">फीस पेमेंट करें</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ================= STUDENT VIEW END ================= -->
+
+<!-- ================= ADMIN PANEL VIEW START ================= -->
+<div id="adminView" class="container" style="display: none;">
+    <div class="stats-grid">
+        <div class="stat-box"><h2 id="totalStudents">320</h2><p>कुल छात्र (1–12)</p></div>
+        <div class="stat-box"><h2>10 & 12</h2><p>स्पेशल बैच</p></div>
+        <div class="stat-box"><h2>AI Auto</h2><p>YT + Insta</p></div>
+    </div>
+
+    <div class="card">
+        <h3>➕ नया बैच / क्लास जोड़ें (लाइव अपडेट)</h3>
+        <select id="newCourseCategory">
+            <option value="SPECIAL">विशेष बैच (10वीं / 12वीं बोर्ड)</option>
+            <option value="12">कक्षा 12 (विशेष कोचिंग)</option>
+            <option value="10">कक्षा 10 (विशेष कोचिंग)</option>
+            <option value="6-9">कक्षा 6 से 9</option>
+            <option value="1-5">कक्षा 1 से 5</option>
+        </select>
+        <input type="text" id="newCourseTitle" placeholder="विषय का नाम (जैसे: कक्षा 12 फिजिक्स विशेष)">
+        <input type="text" id="newCourseTeacher" placeholder="टीचर का नाम और समय (जैसे: हेड टीचर • शाम 5 PM)">
+        <button class="btn btn-success" onclick="addCourse()">क्लास पब्लिश करें</button>
+    </div>
+
+    <div class="card">
+        <h3>📢 सभी छात्रों को लाइव नोटिस भेजें</h3>
+        <input type="text" id="adminNoticeInput" placeholder="नया नोटिस या लाइव क्लास लिंक लिखें...">
+        <button class="btn" onclick="updateNotice()">नोटिस अपडेट करें</button>
+    </div>
+
+    <div class="card">
+        <h3>👨‍🎓 छात्र मैनेजमेंट और अटेंडेंस (कक्षा 1–12)</h3>
+        <div style="display:flex; gap:6px; margin-bottom:8px;">
+            <input type="text" id="newStudentName" placeholder="नए छात्र का नाम..." style="margin:0;">
+            <select id="newStudentClass" style="margin:0; width:130px;">
+                <option value="कक्षा 12 (स्पेशल)">कक्षा 12</option>
+                <option value="कक्षा 10 (स्पेशल)">कक्षा 10</option>
+                <option value="कक्षा 8">कक्षा 8</option>
+                <option value="कक्षा 5">कक्षा 5</option>
+            </select>
+            <button class="btn btn-sm" onclick="addStudent()">जोड़ें</button>
+        </div>
+        <div id="adminStudentList"></div>
+    </div>
+
+    <div class="card" style="border-left: 4px solid #ec4899;">
+        <h3>🎬 AI वीडियो स्टूडियो (YouTube & Instagram ऑटो-पब्लिश) <span class="badge badge-special">AI Engine</span></h3>
+        <p style="font-size:0.82rem; color:#475569; margin-bottom:8px;">
+            हेड टीचर या किसी भी शिक्षक का रॉ लेक्चर वीडियो चुनें—AI खुद उसे एडिट करके, शॉर्ट्स/रील काटकर YouTube और Instagram पर डाल देगा।
+        </p>
+
+        <label style="font-size:0.8rem; font-weight:600;">1. शिक्षक (Teacher) चुनें:</label>
+        <select id="videoTeacherSelect">
+            <option value="हेड टीचर (विशेष बैच 10वीं & 12वीं)">हेड टीचर (विशेष बैच 10वीं & 12वीं)</option>
+            <option value="साइंस & मैथ्स फैकल्टी (कक्षा 9–12)">साइंस & मैथ्स फैकल्टी (कक्षा 9–12)</option>
+            <option value="जूनियर विंग टीचर (कक्षा 1–8)">जूनियर विंग टीचर (कक्षा 1–8)</option>
+        </select>
+
+        <label style="font-size:0.8rem; font-weight:600;">2. लेक्चर / वीडियो का टाइटल:</label>
+        <input type="text" id="aiVideoTitleInput" placeholder="जैसे: कक्षा 12 भौतिकी - महत्वपूर्ण बोर्ड प्रश्न (One Shot)">
+
+        <label style="font-size:0.8rem; font-weight:600;">3. AI एडिटिंग और प्लेटफॉर्म सेटिंग्स:</label>
+        <div style="background:#f8fafc; padding:10px; border-radius:8px; border:1px solid #e2e8f0; margin:6px 0; font-size:0.82rem;">
+            <label style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                <input type="checkbox" id="optAutoCut" checked style="width:auto; margin:0;">
+                ✂️ AI साइलेंस रिमूवल & स्मार्ट कट
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                <input type="checkbox" id="optSubtitles" checked style="width:auto; margin:0;">
+                📝 ऑटो हिंदी/इंग्लिश कैप्शन और की-पॉइंट हाइलाइट्स
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                <input type="checkbox" id="optReels" checked style="width:auto; margin:0;">
+                📱 60-सेकंड Instagram Reel और YouTube Shorts ऑटो-कट
+            </label>
+            <label style="display:flex; align-items:center; gap:8px;">
+                <input type="checkbox" id="optThumbnail" checked style="width:auto; margin:0;">
+                🎨 AI हाई-CTR थंबनेल और SEO टैग्स जनरेशन
+            </label>
+        </div>
+
+        <button class="btn" style="background:linear-gradient(135deg, #ef4444, #dc2626); margin-top:4px;" onclick="runAIVideoStudio('YouTube + Instagram')">
+            🚀 AI एडिट करें और YT + Insta पर डालें
+        </button>
+
+        <div id="aiProgressWrapper" style="display:none; margin-top:12px;">
+            <div style="display:flex; justify-content:space-between; font-size:0.78rem; font-weight:bold; margin-bottom:4px;">
+                <span id="aiProgressStage">AI इंजन शुरू हो रहा है...</span>
+                <span id="aiProgressPercent">0%</span>
+            </div>
+            <div style="width:100%; background:#e2e8f0; height:10px; border-radius:6px; overflow:hidden;">
+                <div id="aiProgressBar" style="width:0%; height:100%; background:linear-gradient(90deg, #4f46e5, #10b981); transition:width 0.4s;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="border-left: 4px solid #ef4444;">
+        <h3>📡 लाइव क्लास ब्रॉडकास्ट कंट्रोल (YouTube + App) <span class="badge" id="liveBadgeStatus" style="background:#fee2e2; color:#b91c1c;">OFFLINE</span></h3>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
+            <div>
+                <label style="font-size:0.78rem; font-weight:600;">बैच चुनें:</label>
+                <select id="liveBatchSelect">
+                    <option value="कक्षा 12 बोर्ड स्पेशल (Live)">कक्षा 12 बोर्ड स्पेशल</option>
+                    <option value="कक्षा 10 बोर्ड स्पेशल (Live)">कक्षा 10 बोर्ड स्पेशल</option>
+                    <option value="कक्षा 9–12 कम्बाइंड सेमिनार">कक्षा 9–12 सेमिनार</option>
+                    <option value="कक्षा 1–8 फाउंडेशन लाइव">कक्षा 1–8 फाउंडेशन</option>
+                </select>
+            </div>
+            <div>
+                <label style="font-size:0.78rem; font-weight:600;">स्ट्रीम क्वालिटी:</label>
+                <select id="liveQualitySelect">
+                    <option value="1080p Full HD (60fps)">1080p Full HD (60fps)</option>
+                    <option value="720p HD Data Saver">720p HD (लो डेटा मोड)</option>
+                </select>
+            </div>
+        </div>
+
+        <input type="text" id="liveTopicInput" placeholder="आज की लाइव क्लास का टॉपिक (जैसे: त्रिकोणमिति और बोर्ड प्रश्न)">
+
+        <div style="display:flex; gap:8px; margin-top:6px;">
+            <button class="btn btn-danger" id="btnStartLive" style="margin-top:0;" onclick="startLiveBroadcast()">🔴 Go Live (YT + App)</button>
+            <button class="btn" id="btnStopLive" style="background:#334155; margin-top:0; display:none;" onclick="stopLiveBroadcast()">⏹️ स्ट्रीम रोकें & AI एडिट भेजें</button>
+        </div>
+
+        <div id="liveTelemetryBox" style="display:none; background:#fef2e2; border:1px solid #fecaca; padding:10px; border-radius:8px; margin-top:10px; font-size:0.8rem;">
+            <div style="display:flex; justify-content:space-between; font-weight:bold; color:#b91c1c;">
+                <span>🔴 LIVE ON AIR</span>
+                <span id="liveViewerCount">👁️ 142 छात्र लाइव देख रहे हैं</span>
+            </div>
+            <p id="liveStreamDetails" style="margin-top:4px; color:#7f1d1d;"></p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>🖥️ लाइव AI और ऑटोमेशन सर्वर लॉग्स <button class="btn btn-sm" style="background:#334155;" onclick="clearSystemLogs()">साफ़ करें</button></h3>
+        <div class="log-box" id="systemConsoleLog">
+            <div>[SYSTEM] Gurukul Pro Core Engine v4.2 लोड हो गया है...</div>
+            <div>[SECURITY] Anti-Tamper & Admin PIN Guard सक्रिय।</div>
+            <div>[DB] कक्षा 1 से 12 और 10वीं-12वीं स्पेशल बैच डेटा सिंक है।</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>📊 पब्लिश्ड YouTube वीडियो और Instagram रील्स</h3>
+        <div id="adminPublishedHistory"></div>
+    </div>
+
+    <div class="card" id="part11ParentAlertCard" style="border-left: 4px solid #0ea5e9;">
+        <h3>📲 पेरेंट्स लाइव अलर्ट सेंटर <span class="badge">Part 11</span></h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <select id="p11StudentSelect">
+                <option value="आर्यन कुमार (कक्षा 12)">आर्यन कुमार (कक्षा 12)</option>
+                <option value="स्नेहा कुमारी (कक्षा 10)">स्नेहा कुमारी (कक्षा 10)</option>
+                <option value="रोहित वर्मा (कक्षा 12)">रोहित वर्मा (कक्षा 12)</option>
+                <option value="अंशिका सिंह (कक्षा 8)">अंशिका सिंह (कक्षा 8)</option>
+            </select>
+            <select id="p11AlertType">
+                <option value="अनुपस्थिति अलर्ट">अनुपस्थिति अलर्ट</option>
+                <option value="टेस्ट स्कोर अपडेट">टेस्ट स्कोर अपडेट</option>
+                <option value="बोर्ड स्पेशल क्लास">बोर्ड स्पेशल क्लास</option>
+            </select>
+        </div>
+        <input type="text" id="p11CustomNote" placeholder="अतिरिक्त संदेश (जैसे: आज शाम 5 बजे टेस्ट रिवीजन है)">
+        <button class="btn" onclick="gpSendParentAlert()">पेरेंट्स अलर्ट तैयार करें</button>
+        <div id="p11AlertFeed" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="card" id="part12ReportCardBox" style="border-left: 4px solid #8b5cf6;">
+        <h3>📊 मंथली परफॉर्मेंस रिपोर्ट कार्ड (क्लास 1–12) <span class="badge">Part 12</span></h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <select id="p12StudentSelect">
+                <option value="आर्यन कुमार|कक्षा 12 (बोर्ड स्पेशल)|94%|88%|A+ (उत्कृष्ट)">आर्यन कुमार (कक्षा 12)</option>
+                <option value="स्नेहा कुमारी|कक्षा 10 (बोर्ड स्पेशल)|91%|92%|A+ (उत्कृष्ट)">स्नेहा कुमारी (कक्षा 10)</option>
+                <option value="रोहित वर्मा|कक्षा 12 (बोर्ड स्पेशल)|86%|84%|A (बहुत अच्छा)">रोहित वर्मा (कक्षा 12)</option>
+                <option value="अंशिका सिंह|कक्षा 8|89%|89%|A (बहुत अच्छा)">अंशिका सिंह (कक्षा 8)</option>
+            </select>
+            <input type="text" id="p12MonthInput" placeholder="माह (जैसे: नवंबर 2026)" value="नवंबर 2026" style="margin:0;">
+        </div>
+        <button class="btn" style="background:#8b5cf6;" onclick="gpGenerateReportCard()">रिपोर्ट कार्ड बनाएं</button>
+        <div id="p12ReportOutput" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="card" id="part13BoardToolkitCard" style="border-left: 4px solid #f59e0b;">
+        <h3>🏆 10वीं & 12वीं बोर्ड स्पेशल टॉपर वॉल और टाइमटेबल <span class="badge badge-special">Part 13</span></h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
+            <div style="background:#fffbeb; border:1px solid #fde68a; padding:10px; border-radius:8px;">
+                <span class="badge badge-special">कक्षा 12 बोर्ड</span>
+                <div style="font-weight:700; margin-top:5px;">आदित्य राज • 94.6%</div>
+                <small style="color:#78350f;">फिजिक्स, केमिस्ट्री & मैथ्स स्पेशल बैच</small>
+            </div>
+            <div style="background:#fffbeb; border:1px solid #fde68a; padding:10px; border-radius:8px;">
+                <span class="badge badge-special">कक्षा 10 बोर्ड</span>
+                <div style="font-weight:700; margin-top:5px;">अंजलि कुमारी • 95.2%</div>
+                <small style="color:#78350f;">साइंस & गणित विशेष बैच</small>
+            </div>
+        </div>
+        <div id="p13ExtraToppers" style="margin-bottom:8px;"></div>
+        <div style="background:#f8fafc; padding:10px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:8px; font-size:0.82rem;">
+            <strong>🕒 विशेष बोर्ड टाइमटेबल (हेड टीचर):</strong>
+            <div class="list-item" style="padding:6px 0;">
+                <span>कक्षा 10 बोर्ड स्पेशल (गणित + साइंस)</span>
+                <span class="badge">सुबह 6:30 – 8:00</span>
+            </div>
+            <div class="list-item" style="padding:6px 0;">
+                <span>कक्षा 12 बोर्ड स्पेशल (फिजिक्स + मैथ्स)</span>
+                <span class="badge">शाम 5:00 – 6:45</span>
+            </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1.2fr 0.8fr auto; gap:6px;">
+            <input type="text" id="p13TopperName" placeholder="नए टॉपर का नाम" style="margin:0;">
+            <input type="text" id="p13TopperScore" placeholder="स्कोर (93%)" style="margin:0;">
+            <button class="btn btn-sm" style="background:#d97706;" onclick="gpAddTopper()">जोड़ें</button>
+        </div>
+    </div>
+
+    <div class="card" id="part14SyllabusDoubtCard" style="border-left: 4px solid #10b981;">
+        <h3>📈 सिलेबस प्रोग्रेस और स्टूडेंट डाउट ट्रैकर <span class="badge">Part 14</span></h3>
+        <div style="background:#f8fafc; padding:10px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:10px; font-size:0.82rem;">
+            <div style="display:flex; justify-content:space-between; font-weight:600;">
+                <span>कक्षा 12 बोर्ड स्पेशल (फिजिक्स & मैथ्स)</span>
+                <span id="p14Prog12Text" style="color:#10b981;">82% पूरा</span>
+            </div>
+            <div style="width:100%; background:#e2e8f0; height:8px; border-radius:6px; overflow:hidden; margin:5px 0 10px;">
+                <div id="p14Prog12Bar" style="width:82%; height:100%; background:#10b981;"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-weight:600;">
+                <span>कक्षा 10 बोर्ड स्पेशल (साइंस & गणित)</span>
+                <span id="p14Prog10Text" style="color:#4f46e5;">88% पूरा</span>
+            </div>
+            <div style="width:100%; background:#e2e8f0; height:8px; border-radius:6px; overflow:hidden; margin:5px 0 8px;">
+                <div id="p14Prog10Bar" style="width:88%; height:100%; background:#4f46e5;"></div>
+            </div>
+            <button class="btn btn-sm" style="background:#0f172a;" onclick="gpAdvanceSyllabus()">+5% सिलेबस अपडेट करें</button>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr auto; gap:6px; margin-bottom:8px;">
+            <input type="text" id="p14DoubtInput" placeholder="नया छात्र डाउट लिखें (जैसे: कक्षा 12 ऑप्टिक्स न्यूमेरिकल)" style="margin:0;">
+            <button class="btn btn-sm btn-success" onclick="gpAddDoubt()">डाउट जोड़ें</button>
+        </div>
+        <div id="p14DoubtList"></div>
+    </div>
+
+    <div class="card" id="part15FeeControlCard" style="border-left: 4px solid #ef4444;">
+        <h3>💳 स्मार्ट फीस मैनेजर और ऑटो-रिमाइंडर <span class="badge">Part 15</span></h3>
+        <div style="display:flex; gap:8px; margin-bottom:8px;">
+            <select id="p15FeeFilter" onchange="gpRenderFeeList()" style="margin:0;">
+                <option value="ALL">सभी छात्र (Paid + Pending)</option>
+                <option value="PENDING">केवल बकाया (Pending Fees)</option>
+                <option value="PAID">केवल जमा (Paid Fees)</option>
+            </select>
+            <button class="btn btn-danger btn-sm" style="white-space:nowrap;" onclick="gpSendBulkFeeReminder()">🔔 सभी बकाया रिमाइंडर</button>
+        </div>
+        <div id="p15FeeList"></div>
+    </div>
+
+    <div class="card" id="part16ReceiptCard" style="border-left: 4px solid #10b981;">
+        <h3>🧾 डिजिटल फीस रसीद जनरेटर <span class="badge">Part 16</span></h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <input type="text" id="p16StudentName" placeholder="छात्र का नाम (जैसे: आर्यन कुमार)" style="margin:0;">
+            <input type="text" id="p16ClassName" placeholder="कक्षा (जैसे: कक्षा 12 स्पेशल)" style="margin:0;">
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:6px;">
+            <input type="number" id="p16Amount" placeholder="राशि (₹ जैसे: 1500)" value="1500" style="margin:0;">
+            <select id="p16PayMode" style="margin:0;">
+                <option value="UPI / Online">UPI / Online</option>
+                <option value="Cash (नकद)">Cash (नकद)</option>
+            </select>
+        </div>
+        <button class="btn btn-success" onclick="gpGenerateReceipt()">डिजिटल रसीद जनरेट करें</button>
+        <div id="p16ReceiptOutput" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="card" id="part17CaptionCard" style="border-left: 4px solid #ec4899;">
+        <h3>✍️ AI YouTube SEO & Instagram कैप्शन पैक <span class="badge badge-special">Part 17</span></h3>
+        <input type="text" id="p17TopicInput" placeholder="वीडियो विषय (जैसे: कक्षा 12 फिजिक्स बोर्ड महत्वपूर्ण प्रश्न)">
+        <button class="btn" style="background:#db2777;" onclick="gpGenerateSocialPack()">✨ AI टाइटल, टैग्स व कैप्शन बनाएं</button>
+        <div id="p17SocialOutput" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="card" id="part18SchedulerCard" style="border-left: 4px solid #6366f1;">
+        <h3>📅 वीकली रील और YouTube शॉर्ट्स शेड्यूलर <span class="badge">Part 18</span></h3>
+        <div style="display:grid; grid-template-columns:0.8fr 1.2fr auto; gap:6px; margin-bottom:8px;">
+            <select id="p18DaySelect" style="margin:0;">
+                <option value="सोमवार">सोमवार</option>
+                <option value="बुधवार">बुधवार</option>
+                <option value="शुक्रवार">शुक्रवार</option>
+                <option value="रविवार">रविवार</option>
+            </select>
+            <input type="text" id="p18ReelTitle" placeholder="रील / शॉर्ट्स टॉपिक..." style="margin:0;">
+            <button class="btn btn-sm" onclick="gpAddReelSchedule()">शेड्यूल</button>
+        </div>
+        <div id="p18ScheduleList"></div>
+    </div>
+
+    <div class="card" id="part19OfflineBackupCard" style="border-left: 4px solid #0f172a;">
+        <h3>💾 ऑफलाइन नोट्स और लोकल डेटा बैकअप <span class="badge">Part 19</span></h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <button class="btn" style="background:#334155; margin-top:0;" onclick="gpSaveOfflineSnapshot()">📥 लोकल सेव (Offline)</button>
+            <button class="btn btn-success" style="margin-top:0;" onclick="gpExportBackupJSON()">📤 डेटा बैकअप रिपोर्ट</button>
+        </div>
+        <div id="p19BackupStatus" style="margin-top:8px; font-size:0.8rem; color:#0f172a;"></div>
+    </div>
+
+    <div class="card" id="part20SecurityCard" style="border-left: 4px solid #10b981;">
+        <h3>🛡️ सुरक्षा और एडमिन PIN सेटिंग्स <span class="badge">Part 20</span></h3>
+        <p style="font-size:0.82rem; color:#475569; margin-bottom:8px;">
+            अनधिकृत पहुंच रोकने के लिए अपना 4-अंकों का नया एडमिन PIN सेट करें और सेशन लॉक करें।
+        </p>
+        <div style="display:flex; gap:8px;">
+            <input type="password" id="newAdminPinInput" maxlength="4" placeholder="नया 4-अंक PIN" style="margin:0;">
+            <button class="btn btn-sm btn-success" onclick="updateAdminPin()">PIN बदलें</button>
+            <button class="btn btn-sm btn-danger" onclick="lockAdminSession()">🔒 लॉक करें</button>
+        </div>
+    </div>
+</div>
+<!-- ================= ADMIN PANEL VIEW END ================= -->
+
+<!-- ================= FLOATING LIVE AI BUTTON ================= -->
+<button class="ai-fab" onclick="toggleAI()">🤖 लाइव AI से बात करें</button>
+
+<!-- ================= AI VOICE & CHAT MODAL ================= -->
+<div class="ai-modal" id="aiModal">
+    <div class="ai-box">
+        <div class="ai-header">
+            <div>
+                <h3 style="margin:0;">🤖 GURUKUL PRO लाइव AI सहायक</h3>
+                <small style="color:#10b981; font-weight:600;">● सक्रिय (बोलकर या लिखकर बात करें)</small>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center;">
+                <button id="btnVoiceToggle" onclick="toggleVoiceMute()" style="border:1px solid #cbd5e1; background:#f8fafc; padding:5px 9px; border-radius:8px; font-size:0.78rem; cursor:pointer;">🔊 आवाज़: ON</button>
+                <button onclick="toggleAI()" style="border:none; background:none; font-size:1.3rem; cursor:pointer; color:#64748b;">✖</button>
+            </div>
+        </div>
+
+        <div style="display:flex; gap:6px; overflow-x:auto; padding:8px 0; border-bottom:1px solid #f1f5f9;">
+            <button class="badge" style="border:none; cursor:pointer; white-space:nowrap;" onclick="quickAskAI('10वीं और 12वीं के स्पेशल बैच की जानकारी दो')">🎓 10वीं-12वीं स्पेशल बैच</button>
+            <button class="badge" style="border:none; cursor:pointer; white-space:nowrap;" onclick="quickAskAI('AI वीडियो एडिटिंग और YouTube अपलोड कैसे काम करता है?')">🎬 AI वीडियो ऑटो-अपलोड</button>
+            <button class="badge" style="border:none; cursor:pointer; white-space:nowrap;" onclick="quickAskAI('कक्षा 1 से 12 तक कौन-कौन सी सुविधाएं हैं?')">📚 कक्षा 1–12 कोर्स</button>
+            <button class="badge" style="border:none; cursor:pointer; white-space:nowrap;" onclick="quickAskAI('कोचिंग की फीस और लाइव क्लास कैसे देखें?')">💳 फीस & लाइव क्लास</button>
+        </div>
+
+        <div class="ai-chat" id="aiChatBox">
+            <div class="msg ai">
+                नमस्ते! मैं <strong>GURUKUL PRO</strong> का स्मार्ट AI असिस्टेंट हूँ। मैं कक्षा 1 से 12 के छात्रों की पढ़ाई में मदद करता हूँ और हेड टीचर के लेक्चर वीडियो को ऑटो-एडिट करके YouTube व Instagram पर पब्लिश करता हूँ। आप नीचे माइक दबाकर मुझसे बात कर सकते हैं!
+            </div>
+        </div>
+
+        <div class="ai-controls">
+            <button class="mic-btn" id="micBtn" onclick="startVoiceAI()" title="माइक दबाकर हिंदी में बोलें">🎤</button>
+            <input type="text" id="aiTextInput" placeholder="यहाँ लिखें या माइक दबाकर बोलें..." style="margin:0;" onkeypress="if(event.key==='Enter') sendTextAI()">
+            <button class="btn" style="width:auto; margin:0; padding:10px 16px;" onclick="sendTextAI()">भेजें</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================= BOTTOM NAVIGATION BAR ================= -->
+<div class="bottom-nav" id="studentNav">
+    <button class="nav-item active" onclick="switchTab('tabHome', this)">🏠 होम & बैच (1–12)</button>
+    <button class="nav-item" onclick="switchTab('tabQuiz', this)">📝 टेस्ट & फीस</button>
+    <button class="nav-item" onclick="toggleAI()">🤖 लाइव AI</button>
+</div>
+
+<!-- ================= COMPLETE JAVASCRIPT ENGINE (STEPS 1–20 + SECURITY) ================= -->
+<script>
+    // Security & Session Guard (Part 20)
+    let adminPinCode = localStorage.getItem('gp_admin_pin') || "1234";
+    let isAdminUnlocked = false;
+    let failedAttempts = 0;
+
+    function sanitizeHTML(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    function requestAdminAccess() {
+        if (isAdminUnlocked) {
+            switchRole('admin');
+            return;
+        }
+        document.getElementById('pinErrorMsg').style.display = 'none';
+        document.getElementById('adminPinInput').value = '';
+        document.getElementById('adminPinModal').classList.add('open');
+    }
+
+    function closePinModal() {
+        document.getElementById('adminPinModal').classList.remove('open');
+    }
+
+    function verifyAdminPin() {
+        if (failedAttempts >= 5) {
+            alert("🚨 सुरक्षा चेतावनी: बहुत अधिक गलत प्रयास! कृपया कुछ देर बाद प्रयास करें।");
+            return;
+        }
+        const entered = document.getElementById('adminPinInput').value.trim();
+        if (entered === adminPinCode) {
+            isAdminUnlocked = true;
+            failedAttempts = 0;
+            closePinModal();
+            switchRole('admin');
+            writeSystemLog("[SECURITY] एडमिन पैनल PIN द्वारा सफलतापूर्वक अनलॉक किया गया।");
+        } else {
+            failedAttempts++;
+            document.getElementById('pinErrorMsg').style.display = 'block';
+            writeSystemLog(`[ALERT] एडमिन लॉगिन का असफल प्रयास (${failedAttempts}/5)`);
+        }
+    }
+
+    function updateAdminPin() {
+        const newPin = document.getElementById('newAdminPinInput').value.trim();
+        if (!/^\d{4}$/.test(newPin)) {
+            return alert("कृपया 4 अंकों का मान्य संख्यात्मक PIN दर्ज करें!");
+        }
+        adminPinCode = newPin;
+        try { localStorage.setItem('gp_admin_pin', newPin); } catch(e) {}
+        document.getElementById('newAdminPinInput').value = '';
+        writeSystemLog("[SECURITY] एडमिन PIN सफलतापूर्वक अपडेट किया गया।");
+        alert("✅ नया एडमिन PIN सुरक्षित रूप से सेव हो गया है!");
+    }
+
+    function lockAdminSession() {
+        isAdminUnlocked = false;
+        switchRole('student');
+        alert("🔒 एडमिन सेशन सुरक्षित रूप से लॉक कर दिया गया है।");
+    }
+
+    // Core Data
+    let courses = [
+        { category: "SPECIAL", title: "कक्षा 12 बोर्ड स्पेशल (फिजिक्स & मैथ्स)", info: "हेड टीचर • शाम 5:00 PM (YouTube + App Live)" },
+        { category: "SPECIAL", title: "कक्षा 10 बोर्ड स्पेशल (साइंस & गणित क्रैश कोर्स)", info: "हेड टीचर • सुबह 7:00 AM (विशेष बैच)" },
+        { category: "12", title: "कक्षा 12 रसायन एवं जीव विज्ञान (NCERT Master)", info: "सीनियर फैकल्टी • शाम 6:30 PM" },
+        { category: "10", title: "कक्षा 10 अंग्रेजी एवं सामाजिक विज्ञान", info: "अनुभवी शिक्षक • दोपहर 4:00 PM" },
+        { category: "6-9", title: "कक्षा 6 से 9 फाउंडेशन बैच (सभी विषय)", info: "जूनियर व मिडिल विंग • दोपहर 3:00 PM" },
+        { category: "1-5", title: "कक्षा 1 से 5 बेसिक्स, स्पोकन व गणित", info: "प्राइमरी विंग • सुबह 9:00 AM" }
+    ];
+
+    let students = [
+        { name: "आर्यन कुमार", cls: "कक्षा 12 (स्पेशल)", status: "Present" },
+        { name: "स्नेहा कुमारी", cls: "कक्षा 10 (स्पेशल)", status: "Present" },
+        { name: "रोहित वर्मा", cls: "कक्षा 12 (स्पेशल)", status: "Present" },
+        { name: "अंशिका सिंह", cls: "कक्षा 8", status: "Absent" }
+    ];
+
+    let publishedVideos = [
+        {
+            title: "कक्षा 12 भौतिकी: इलेक्ट्रोस्टैटिक्स महा-मैराथन (One Shot)",
+            teacher: "हेड टीचर (विशेष बैच 10वीं & 12वीं)",
+            platforms: "YouTube Full Video + Instagram Reel",
+            stats: "YT: 4.8K Views • Insta: 9.2K Plays",
+            time: "आज, 2 घंटे पहले"
+        },
+        {
+            title: "कक्षा 10 गणित: त्रिकोणमिति के सबसे महत्वपूर्ण प्रश्न",
+            teacher: "हेड टीचर (विशेष बैच 10वीं & 12वीं)",
+            platforms: "YouTube + Instagram Shorts",
+            stats: "YT: 3.1K Views • Insta: 6.5K Plays",
+            time: "कल"
+        }
+    ];
+
+    let gpExtraToppers = [
+        { name: "साक्षी शर्मा (कक्षा 12)", score: "93.8%" }
+    ];
+
+    let gpSyllabus12 = 82;
+    let gpSyllabus10 = 88;
+    let gpDoubts = [
+        { text: "कक्षा 12: गॉस का प्रमेय (Gauss Theorem) न्यूमेरिकल", solved: false },
+        { text: "कक्षा 10: द्विघात समीकरण (Quadratic Equations) वर्ड प्रॉब्लम", solved: true }
+    ];
+
+    let gpFeeRecords = [
+        { name: "आर्यन कुमार", cls: "कक्षा 12 (स्पेशल)", amount: 1500, status: "PAID" },
+        { name: "स्नेहा कुमारी", cls: "कक्षा 10 (स्पेशल)", amount: 1200, status: "PENDING" },
+        { name: "रोहित वर्मा", cls: "कक्षा 12 (स्पेशल)", amount: 1500, status: "PENDING" },
+        { name: "अंशिका सिंह", cls: "कक्षा 8", amount: 800, status: "PAID" }
+    ];
+
+    let gpReelSchedule = [
+        { day: "सोमवार", title: "12th Physics 60-Sec Formula Trick (YT Shorts + Insta Reel)" },
+        { day: "शुक्रवार", title: "10th Maths Board Topper Strategy (Head Teacher Clip)" }
+    ];
+
+    let isVoiceEnabled = true;
+    let liveViewerInterval = null;
+
+    function writeSystemLog(message) {
+        const logBox = document.getElementById('systemConsoleLog');
+        if (!logBox) return;
+        const time = new Date().toLocaleTimeString('hi-IN');
+        logBox.innerHTML += `<div>[${time}] ${sanitizeHTML(message)}</div>`;
+        logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    function clearSystemLogs() {
+        const logBox = document.getElementById('systemConsoleLog');
+        if (logBox) logBox.innerHTML = `<div>[SYSTEM] कंसोल लॉग साफ़ किया गया। इंजन रेडी...</div>`;
+    }
+
+    function renderStudentCourses() {
+        const filter = document.getElementById('studentClassFilter').value;
+        const container = document.getElementById('studentCourseList');
+        const filtered = courses.filter(c => {
+            if (filter === "ALL") return true;
+            if (filter === "SPECIAL") return c.category === "SPECIAL" || c.category === "12" || c.category === "10";
+            return c.category === filter;
+        });
+
+        container.innerHTML = filtered.map(c => `
+            <div class="list-item">
+                <div>
+                    <strong>${sanitizeHTML(c.title)}</strong>
+                    ${c.category === 'SPECIAL' ? '<span class="badge badge-special" style="margin-left:4px;">विशेष</span>' : ''}
+                    <br><small style="color:#64748b;">${sanitizeHTML(c.info)}</small>
+                </div>
+                <button class="btn btn-sm" onclick="joinClassDemo('${sanitizeHTML(c.title)}')">जॉइन क्लास</button>
+            </div>
+        `).join('');
+
+        document.getElementById('courseCount').innerText = courses.length;
+    }
+
+    function renderPublishedVideos() {
+        const studentFeed = document.getElementById('studentVideoFeed');
+        const adminHistory = document.getElementById('adminPublishedHistory');
+
+        const htmlContent = publishedVideos.map(v => `
+            <div class="list-item" style="align-items:flex-start;">
+                <div>
+                    <span class="badge" style="background:#fee2e2; color:#b91c1c;">▶ YouTube</span>
+                    <span class="badge" style="background:#fce7f3; color:#be185d;">📱 Instagram</span>
+                    <div style="margin-top:5px;"><strong>${sanitizeHTML(v.title)}</strong></div>
+                    <small style="color:#64748b;">${sanitizeHTML(v.teacher)} • ${sanitizeHTML(v.time)}</small><br>
+                    <small style="color:#10b981; font-weight:600;">${sanitizeHTML(v.stats)}</small>
+                </div>
+                <button class="btn btn-sm" style="background:#0f172a;" onclick="alert('YouTube और Instagram पर ऑटो-पब्लिश वीडियो प्ले हो रहा है')">देखें</button>
+            </div>
+        `).join('');
+
+        if (studentFeed) studentFeed.innerHTML = htmlContent;
+        if (adminHistory) adminHistory.innerHTML = htmlContent;
+    }
+
+    function renderAdminStudents() {
+        const list = document.getElementById('adminStudentList');
+        if (!list) return;
+        list.innerHTML = students.map((s, idx) => `
+            <div class="list-item">
+                <div>
+                    <strong>${sanitizeHTML(s.name)}</strong><br>
+                    <small style="color:#64748b;">${sanitizeHTML(s.cls)}</small>
+                </div>
+                <button class="badge" style="border:none; cursor:pointer; padding:6px 10px; background:${s.status === 'Present' ? '#dcfce7' : '#fee2e2'}; color:${s.status === 'Present' ? '#15803d' : '#b91c1c'};" onclick="toggleAttendance(${idx})">
+                    ${s.status === 'Present' ? '✔ उपस्थित (Present)' : '✖ अनुपस्थित (Absent)'}
+                </button>
+            </div>
+        `).join('');
+    }
+
+    function joinClassDemo(title) {
+        alert(`🎥 लाइव स्ट्रीम व स्टडी नोट्स खुल रहे हैं:\n${title}`);
+        writeSystemLog(`[STUDENT] छात्र ने क्लास जॉइन की: ${title}`);
+    }
+
+    function switchRole(role) {
+        if (role === 'student') {
+            document.getElementById('studentView').style.display = 'block';
+            document.getElementById('adminView').style.display = 'none';
+            document.getElementById('studentNav').style.display = 'flex';
+            document.getElementById('btnStudentRole').classList.add('active');
+            document.getElementById('btnAdminRole').classList.remove('active');
+        } else {
+            document.getElementById('studentView').style.display = 'none';
+            document.getElementById('adminView').style.display = 'block';
+            document.getElementById('studentNav').style.display = 'none';
+            document.getElementById('btnAdminRole').classList.add('active');
+            document.getElementById('btnStudentRole').classList.remove('active');
+        }
+    }
+
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function addCourse() {
+        const category = document.getElementById('newCourseCategory').value;
+        const title = document.getElementById('newCourseTitle').value.trim();
+        const info = document.getElementById('newCourseTeacher').value.trim() || "हेड टीचर • लाइव बैच";
+
+        if (!title) return alert("कृपया क्लास या विषय का नाम लिखें!");
+
+        courses.unshift({ category, title, info });
+        document.getElementById('newCourseTitle').value = "";
+        document.getElementById('newCourseTeacher').value = "";
+        renderStudentCourses();
+        writeSystemLog(`[ADMIN] नया बैच जोड़ा गया: ${title} (${category})`);
+        alert("✅ नई क्लास पब्लिश हो गई!");
+    }
+
+    function updateNotice() {
+        const text = document.getElementById('adminNoticeInput').value.trim();
+        if (!text) return alert("कृपया नोटिस लिखें!");
+        document.getElementById('liveNotice').innerText = text;
+        document.getElementById('adminNoticeInput').value = "";
+        writeSystemLog(`[NOTICE] सभी छात्रों के ऐप पर लाइव नोटिस अपडेट किया गया।`);
+        alert("📢 नोटिस सभी छात्रों की स्क्रीन पर लाइव अपडेट हो गया है!");
+    }
+
+    function addStudent() {
+        const name = document.getElementById('newStudentName').value.trim();
+        const cls = document.getElementById('newStudentClass').value;
+        if (!name) return alert("छात्र का नाम लिखें!");
+        students.unshift({ name, cls, status: "Present" });
+        document.getElementById('newStudentName').value = "";
+        const totalEl = document.getElementById('totalStudents');
+        totalEl.innerText = parseInt(totalEl.innerText) + 1;
+        renderAdminStudents();
+        writeSystemLog(`[ADMIN] नया छात्र पंजीकृत: ${name} (${cls})`);
+    }
+
+    function toggleAttendance(idx) {
+        students[idx].status = students[idx].status === 'Present' ? 'Absent' : 'Present';
+        renderAdminStudents();
+        writeSystemLog(`[ATTENDANCE] ${students[idx].name} की अटेंडेंस बदली गई: ${students[idx].status}`);
+    }
+
+    function checkQuiz(isCorrect) {
+        const fb = document.getElementById('quizFeedback');
+        if (isCorrect) {
+            fb.style.color = "#15803d";
+            fb.innerText = "✅ बिल्कुल सही जवाब! ऑक्सीजन (O2) — आपको +10 स्कोर मिले।";
+        } else {
+            fb.style.color = "#b91c1c";
+            fb.innerText = "❌ गलत उत्तर! सही उत्तर B) ऑक्सीजन (O2) है।";
+        }
+    }
+
+    function runAIVideoStudio(targetPlatforms) {
+        const teacher = document.getElementById('videoTeacherSelect').value;
+        const rawTitle = document.getElementById('aiVideoTitleInput').value.trim() || "बोर्ड स्पेशल लेक्चर (हेड टीचर)";
+        const progressWrap = document.getElementById('aiProgressWrapper');
+        const progressBar = document.getElementById('aiProgressBar');
+        const progressStage = document.getElementById('aiProgressStage');
+        const progressPercent = document.getElementById('aiProgressPercent');
+
+        progressWrap.style.display = "block";
+        progressBar.style.width = "10%";
+        progressStage.innerText = "1/4: रॉ लेक्चर वीडियो स्कैन और ऑडियो क्लीनिंग...";
+        progressPercent.innerText = "10%";
+        writeSystemLog(`[AI-VIDEO] '${rawTitle}' (${teacher}) की प्रोसेसिंग शुरू...`);
+
+        setTimeout(() => {
+            progressBar.style.width = "40%";
+            progressStage.innerText = "2/4: AI ऑटो-कट, साइलेंस रिमूवल व हिंदी कैप्शन...";
+            progressPercent.innerText = "40%";
+        }, 1200);
+
+        setTimeout(() => {
+            progressBar.style.width = "75%";
+            progressStage.innerText = "3/4: 9:16 Instagram Reel, YT Shorts व थंबनेल रेंडरिंग...";
+            progressPercent.innerText = "75%";
+        }, 2500);
+
+        setTimeout(() => {
+            progressBar.style.width = "100%";
+            progressStage.innerText = "✅ YouTube और Instagram पर सफलतापूर्वक पब्लिश!";
+            progressPercent.innerText = "100%";
+            writeSystemLog(`[PUBLISH-SUCCESS] '${rawTitle}' को YouTube और Instagram पर लाइव कर दिया गया!`);
+
+            publishedVideos.unshift({
+                title: rawTitle,
+                teacher: teacher,
+                platforms: targetPlatforms,
+                stats: "YT: Just Published • Insta Reel: Live",
+                time: "अभी-अभी (AI Auto-Posted)"
+            });
+
+            renderPublishedVideos();
+            document.getElementById('aiVideoTitleInput').value = "";
+            speakText(`हेड टीचर का वीडियो ${rawTitle} AI द्वारा एडिट करके YouTube और Instagram पर सफलतापूर्वक पब्लिश कर दिया गया है।`);
+        }, 3800);
+    }
+
+    function startLiveBroadcast() {
+        const batch = document.getElementById('liveBatchSelect').value;
+        const topic = document.getElementById('liveTopicInput').value.trim() || "विशेष लाइव बोर्ड क्लास";
+        const quality = document.getElementById('liveQualitySelect').value;
+
+        document.getElementById('liveBadgeStatus').innerText = "● LIVE ON AIR";
+        document.getElementById('liveBadgeStatus').style.background = "#dcfce7";
+        document.getElementById('liveBadgeStatus').style.color = "#15803d";
+
+        document.getElementById('btnStartLive').style.display = "none";
+        document.getElementById('btnStopLive').style.display = "block";
+        document.getElementById('liveTelemetryBox').style.display = "block";
+        document.getElementById('liveStreamDetails').innerText = `${batch} | टॉपिक: ${topic} | क्वालिटी: ${quality}`;
+
+        document.getElementById('liveNotice').innerText = `🔴 अभी लाइव चल रहा है: ${batch} — "${topic}"। ऊपर दिए गए बैच में जाकर तुरंत जुड़ें!`;
+        writeSystemLog(`[LIVE-RTMP] YouTube और App पर लाइव स्ट्रीम शुरू: ${batch} (${topic})`);
+
+        let viewers = 142;
+        liveViewerInterval = setInterval(() => {
+            viewers += Math.floor(Math.random() * 7) + 1;
+            document.getElementById('liveViewerCount').innerText = `👁️ ${viewers} छात्र लाइव देख रहे हैं`;
+        }, 2500);
+    }
+
+    function stopLiveBroadcast() {
+        clearInterval(liveViewerInterval);
+        const topic = document.getElementById('liveTopicInput').value.trim() || "लाइव क्लास रिकॉर्डिंग";
+
+        document.getElementById('liveBadgeStatus').innerText = "OFFLINE";
+        document.getElementById('liveBadgeStatus').style.background = "#fee2e2";
+        document.getElementById('liveBadgeStatus').style.color = "#b91c1c";
+
+        document.getElementById('btnStartLive').style.display = "block";
+        document.getElementById('btnStopLive').style.display = "none";
+        document.getElementById('liveTelemetryBox').style.display = "none";
+
+        writeSystemLog(`[LIVE-END] स्ट्रीम समाप्त। रिकॉर्डिंग ऑटोमैटिक AI वीडियो स्टूडियो में भेजी गई।`);
+        document.getElementById('aiVideoTitleInput').value = topic + " (Live Recording)";
+        runAIVideoStudio("YouTube + Instagram");
+    }
+
+    function gpSendParentAlert() {
+        const student = document.getElementById('p11StudentSelect').value;
+        const type = document.getElementById('p11AlertType').value;
+        const note = document.getElementById('p11CustomNote').value.trim() || "कृपया नियमित उपस्थिति और अभ्यास सुनिश्चित करें।";
+        const feed = document.getElementById('p11AlertFeed');
+        const time = new Date().toLocaleTimeString('hi-IN');
+
+        feed.innerHTML = `
+            <div style="background:#f0f9ff; border:1px solid #bae6fd; padding:10px; border-radius:8px; margin-bottom:6px; font-size:0.82rem;">
+                <strong>✅ पेरेंट्स अलर्ट तैयार (${time})</strong><br>
+                <span>छात्र: <b>${sanitizeHTML(student)}</b> | प्रकार: <span class="badge">${sanitizeHTML(type)}</span></span><br>
+                <small style="color:#0369a1;">संदेश: "नमस्ते अभिभावक, GURUKUL PRO से सूचित किया जाता है — ${sanitizeHTML(student)} (${sanitizeHTML(type)}): ${sanitizeHTML(note)}"</small>
+            </div>
+        ` + feed.innerHTML;
+
+        document.getElementById('p11CustomNote').value = "";
+        writeSystemLog(`[PARENT-ALERT] ${student} के अभिभावक के लिए ${type} जनरेट किया गया।`);
+    }
+
+    function gpGenerateReportCard() {
+        const raw = document.getElementById('p12StudentSelect').value.split('|');
+        const month = document.getElementById('p12MonthInput').value.trim() || "वर्तमान माह";
+        const out = document.getElementById('p12ReportOutput');
+
+        out.innerHTML = `
+            <div style="background:#f5f3ff; border:1px solid #ddd6fe; padding:12px; border-radius:10px; font-size:0.84rem;">
+                <div style="display:flex; justify-content:space-between; border-bottom:1px dashed #c4b5fd; padding-bottom:6px; margin-bottom:6px;">
+                    <strong>🎓 GURUKUL PRO रिपोर्ट कार्ड</strong>
+                    <span class="badge">${sanitizeHTML(month)}</span>
+                </div>
+                <div><b>छात्र का नाम:</b> ${sanitizeHTML(raw[0])}</div>
+                <div><b>बैच / कक्षा:</b> ${sanitizeHTML(raw[1])}</div>
+                <div><b>मासिक उपस्थिति:</b> ${sanitizeHTML(raw[2])} | <b>टेस्ट औसत:</b> ${sanitizeHTML(raw[3])}</div>
+                <div style="margin-top:4px; color:#5b21b6; font-weight:700;">ओवरऑल ग्रेड: ${sanitizeHTML(raw[4])}</div>
+            </div>
+        `;
+        writeSystemLog(`[REPORT-CARD] ${raw[0]} का ${month} रिपोर्ट कार्ड जनरेट हुआ।`);
+    }
+
+    function gpRenderExtraToppers() {
+        const box = document.getElementById('p13ExtraToppers');
+        if (!box) return;
+        box.innerHTML = gpExtraToppers.map(t => `
+            <div class="list-item" style="padding:6px 0;">
+                <span>🏅 <strong>${sanitizeHTML(t.name)}</strong></span>
+                <span class="badge badge-special">${sanitizeHTML(t.score)}</span>
+            </div>
+        `).join('');
+    }
+
+    function gpAddTopper() {
+        const name = document.getElementById('p13TopperName').value.trim();
+        const score = document.getElementById('p13TopperScore').value.trim() || "94%";
+        if (!name) return alert("टॉपर का नाम और कक्षा लिखें!");
+        gpExtraToppers.unshift({ name, score });
+        document.getElementById('p13TopperName').value = "";
+        document.getElementById('p13TopperScore').value = "";
+        gpRenderExtraToppers();
+        writeSystemLog(`[TOPPER-WALL] नया बोर्ड टॉपर जोड़ा गया: ${name} (${score})`);
+    }
+
+    function gpAdvanceSyllabus() {
+        gpSyllabus12 = Math.min(100, gpSyllabus12 + 5);
+        gpSyllabus10 = Math.min(100, gpSyllabus10 + 5);
+        document.getElementById('p14Prog12Text').innerText = gpSyllabus12 + "% पूरा";
+        document.getElementById('p14Prog12Bar').style.width = gpSyllabus12 + "%";
+        document.getElementById('p14Prog10Text').innerText = gpSyllabus10 + "% पूरा";
+        document.getElementById('p14Prog10Bar').style.width = gpSyllabus10 + "%";
+        writeSystemLog(`[SYLLABUS] बोर्ड बैच सिलेबस प्रोग्रेस अपडेट: 12वीं (${gpSyllabus12}%), 10वीं (${gpSyllabus10}%)`);
+    }
+
+    function gpRenderDoubts() {
+        const box = document.getElementById('p14DoubtList');
+        if (!box) return;
+        box.innerHTML = gpDoubts.map((d, i) => `
+            <div class="list-item">
+                <span style="font-size:0.83rem; ${d.solved ? 'text-decoration:line-through; color:#64748b;' : ''}">${sanitizeHTML(d.text)}</span>
+                <button class="badge" style="border:none; cursor:pointer; background:${d.solved ? '#dcfce7' : '#fef3c7'}; color:${d.solved ? '#15803d' : '#b45309'};" onclick="gpToggleDoubt(${i})">
+                    ${d.solved ? '✔ हल हो गया' : '⏳ पेंडिंग'}
+                </button>
+            </div>
+        `).join('');
+    }
+
+    function gpAddDoubt() {
+        const txt = document.getElementById('p14DoubtInput').value.trim();
+        if (!txt) return alert("कृपया छात्र का डाउट लिखें!");
+        gpDoubts.unshift({ text: txt, solved: false });
+        document.getElementById('p14DoubtInput').value = "";
+        gpRenderDoubts();
+    }
+
+    function gpToggleDoubt(idx) {
+        gpDoubts[idx].solved = !gpDoubts[idx].solved;
+        gpRenderDoubts();
+    }
+
+    function gpRenderFeeList() {
+        const filter = document.getElementById('p15FeeFilter').value;
+        const box = document.getElementById('p15FeeList');
+        if (!box) return;
+
+        const filtered = gpFeeRecords.filter(f => filter === "ALL" || f.status === filter);
+        box.innerHTML = filtered.map(f => `
+            <div class="list-item">
+                <div>
+                    <strong>${sanitizeHTML(f.name)}</strong> <small style="color:#64748b;">(${sanitizeHTML(f.cls)})</small><br>
+                    <small>मासिक शुल्क: ₹${f.amount}</small>
+                </div>
+                <button class="badge" style="border:none; cursor:pointer; padding:6px 10px; background:${f.status === 'PAID' ? '#dcfce7' : '#fee2e2'}; color:${f.status === 'PAID' ? '#15803d' : '#b91c1c'};" onclick="gpToggleFeeStatus('${sanitizeHTML(f.name)}')">
+                    ${f.status === 'PAID' ? '✔ जमा (Paid)' : '⚠️ बकाया (Mark Paid)'}
+                </button>
+            </div>
+        `).join('');
+    }
+
+    function gpToggleFeeStatus(studentName) {
+        const rec = gpFeeRecords.find(r => r.name === studentName);
+        if (rec) {
+            rec.status = rec.status === "PAID" ? "PENDING" : "PAID";
+            gpRenderFeeList();
+            writeSystemLog(`[FEES] ${rec.name} की फीस स्थिति बदली गई: ${rec.status}`);
+        }
+    }
+
+    function gpSendBulkFeeReminder() {
+        const pendingCount = gpFeeRecords.filter(f => f.status === "PENDING").length;
+        alert(`🔔 ${pendingCount} बकाया फीस वाले छात्रों के अभिभावकों को ऑटो-रिमाइंडर नोटिफिकेशन भेज दिया गया है!`);
+        writeSystemLog(`[FEE-REMINDER] ${pendingCount} अभिभावकों को फीस रिमाइंडर भेजा गया।`);
+    }
+
+    function gpGenerateReceipt() {
+        const name = document.getElementById('p16StudentName').value.trim() || "आर्यन कुमार";
+        const cls = document.getElementById('p16ClassName').value.trim() || "कक्षा 12 (बोर्ड स्पेशल)";
+        const amt = document.getElementById('p16Amount').value || "1500";
+        const mode = document.getElementById('p16PayMode').value;
+        const receiptNo = "GP-" + Math.floor(100000 + Math.random() * 900000);
+        const dateStr = new Date().toLocaleDateString('hi-IN');
+
+        document.getElementById('p16ReceiptOutput').innerHTML = `
+            <div style="background:#ecfdf5; border:1px solid #a7f3d0; padding:12px; border-radius:10px; font-size:0.83rem;">
+                <div style="display:flex; justify-content:space-between; font-weight:700; color:#065f46; border-bottom:1px dashed #6ee7b7; padding-bottom:5px; margin-bottom:6px;">
+                    <span>🧾 GURUKUL PRO फीस रसीद</span>
+                    <span>#${receiptNo}</span>
+                </div>
+                <div><b>छात्र:</b> ${sanitizeHTML(name)} (${sanitizeHTML(cls)})</div>
+                <div><b>जमा राशि:</b> ₹${sanitizeHTML(amt)} | <b>माध्यम:</b> ${sanitizeHTML(mode)}</div>
+                <div><b>दिनांक:</b> ${dateStr} | <b>स्थिति:</b> <span style="color:#059669; font-weight:700;">PAID ✔</span></div>
+            </div>
+        `;
+        writeSystemLog(`[RECEIPT] रसीद #${receiptNo} जनरेट: ${name} (₹${amt})`);
+    }
+
+    function gpGenerateSocialPack() {
+        const topic = document.getElementById('p17TopicInput').value.trim() || "कक्षा 12 बोर्ड स्पेशल वन-शॉट लेक्चर";
+        document.getElementById('p17SocialOutput').innerHTML = `
+            <div style="background:#fdf2f8; border:1px solid #fbcfe8; padding:12px; border-radius:10px; font-size:0.82rem; line-height:1.5;">
+                <div><strong>▶ YouTube SEO टाइटल:</strong><br>${sanitizeHTML(topic)} | Head Teacher Special Batch | Class 10 & 12 Board Exam</div>
+                <div style="margin-top:6px;"><strong>📱 Instagram Reel कैप्शन:</strong><br>बोर्ड परीक्षा की सबसे सटीक तैयारी अब GURUKUL PRO के साथ! पूरा लेक्चर YouTube पर लाइव है। 🚀📚</div>
+                <div style="margin-top:6px; color:#be185d;"><strong>#️⃣ ऑटो टैग्स:</strong> #GurukulPro #BoardExam #Class12 #Class10 #HeadTeacher #StudyReels</div>
+            </div>
+        `;
+        writeSystemLog(`[AI-SEO] '${topic}' के लिए YouTube SEO और Instagram कैप्शन पैक तैयार।`);
+    }
+
+    function gpRenderReelSchedule() {
+        const box = document.getElementById('p18ScheduleList');
+        if (!box) return;
+        box.innerHTML = gpReelSchedule.map(item => `
+            <div class="list-item">
+                <div>
+                    <span class="badge">${sanitizeHTML(item.day)}</span>
+                    <span style="font-size:0.83rem; margin-left:6px;">${sanitizeHTML(item.title)}</span>
+                </div>
+                <small style="color:#10b981; font-weight:700;">Auto-Queue</small>
+            </div>
+        `).join('');
+    }
+
+    function gpAddReelSchedule() {
+        const day = document.getElementById('p18DaySelect').value;
+        const title = document.getElementById('p18ReelTitle').value.trim();
+        if (!title) return alert("रील या शॉर्ट्स का टॉपिक लिखें!");
+        gpReelSchedule.unshift({ day, title });
+        document.getElementById('p18ReelTitle').value = "";
+        gpRenderReelSchedule();
+        writeSystemLog(`[SCHEDULER] ${day} के लिए नई रील शेड्यूल की गई: ${title}`);
+    }
+
+    function gpSaveOfflineSnapshot() {
+        try {
+            const snapshot = {
+                savedAt: new Date().toLocaleString('hi-IN'),
+                toppers: gpExtraToppers,
+                fees: gpFeeRecords,
+                schedule: gpReelSchedule
+            };
+            localStorage.setItem('gurukul_pro_offline_backup', JSON.stringify(snapshot));
+            document.getElementById('p19BackupStatus').innerText = `✅ लोकल ऑफलाइन डेटा सेव हो गया है (${snapshot.savedAt})।`;
+            writeSystemLog(`[OFFLINE-DB] लोकल स्टोरेज में कोचिंग डेटा सुरक्षित किया गया।`);
+        } catch (e) {
+            document.getElementById('p19BackupStatus').innerText = "⚠️ इस वेबव्यू में लोकल स्टोरेज सीमित है, बैकअप रिपोर्ट तैयार है।";
+        }
+    }
+
+    function gpExportBackupJSON() {
+        const summary = `GURUKUL PRO BACKUP (${new Date().toLocaleDateString('hi-IN')}): कुल फीस रिकॉर्ड्स = ${gpFeeRecords.length}, शेड्यूल रील्स = ${gpReelSchedule.length}, बोर्ड सिलेबस = 12वीं (${gpSyllabus12}%), 10वीं (${gpSyllabus10}%)`;
+        document.getElementById('p19BackupStatus').innerText = "📋 बैकअप समरी: " + summary;
+        writeSystemLog(`[BACKUP] कोचिंग डेटा बैकअप रिपोर्ट जनरेट की गई।`);
+    }
+
+    function toggleAI() {
+        document.getElementById('aiModal').classList.toggle('open');
+    }
+
+    function toggleVoiceMute() {
+        isVoiceEnabled = !isVoiceEnabled;
+        const btn = document.getElementById('btnVoiceToggle');
+        btn.innerText = isVoiceEnabled ? "🔊 आवाज़: ON" : "🔇 आवाज़: OFF";
+        if (!isVoiceEnabled && 'speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+        }
+    }
+
+    function speakText(text) {
+        if (!isVoiceEnabled || !('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        const cleanText = text.replace(/<[^>]*>/g, '');
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.lang = 'hi-IN';
+        utterance.rate = 1.0;
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function quickAskAI(promptText) {
+        processAIResponse(promptText);
+    }
+
+    function processAIResponse(userQuery) {
+        const chatBox = document.getElementById('aiChatBox');
+        chatBox.innerHTML += `<div class="msg user">${sanitizeHTML(userQuery)}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        const q = userQuery.toLowerCase();
+        let reply = "मैं गुरुकुल प्रो का स्मार्ट AI सहायक हूँ। यहाँ कक्षा 1 से 12 तक की पढ़ाई, 10वीं और 12वीं के विशेष बैच, लाइव YouTube क्लासेस और ऑटोमेटेड AI वीडियो एडिटिंग की पूरी सुविधा उपलब्ध है।";
+
+        if (q.includes("10") || q.includes("12") || q.includes("स्पेशल") || q.includes("बोर्ड")) {
+            reply = "कक्षा 10वीं और 12वीं के लिए हमारे यहाँ हेड टीचर द्वारा विशेष बोर्ड कोचिंग बैच चलाए जाते हैं। इनकी लाइव क्लासेस सीधे YouTube और ऐप पर चलती हैं और साथ में ऑनलाइन मॉक टेस्ट भी होते हैं।";
+        } else if (q.includes("वीडियो") || q.includes("एडिट") || q.includes("youtube") || q.includes("instagram") || q.includes("इंस्टाग्राम") || q.includes("यूट्यूब")) {
+            reply = "जब हेड टीचर या कोई शिक्षक लेक्चर वीडियो रिकॉर्ड करता है, तो हमारा AI स्टूडियो अपने आप वीडियो के बेकार हिस्से काटता है, हिंदी सबटाइटल लगाता है, 60 सेकंड की इंस्टाग्राम रील व यूट्यूब शॉर्ट्स बनाता है और सीधे YouTube व Instagram पर अपलोड कर देता है।";
+        } else if (q.includes("1 से 12") || q.includes("कोर्स") || q.includes("कक्षा") || q.includes("बैच")) {
+            reply = `इस ऐप में कक्षा 1 से 5, कक्षा 6 से 9, और कक्षा 10वीं व 12वीं के विशेष बैच मिलाकर कुल ${courses.length} सक्रिय कोर्सेज चल रहे हैं। छात्र अपनी क्लास चुनकर पढ़ाई कर सकते हैं।`;
+        } else if (q.includes("फीस") || q.includes("लाइव") || q.includes("स्ट्रीम")) {
+            reply = "छात्र ऐप के अंदर से अपनी मासिक फीस जमा कर सकते हैं, ऑनलाइन रसीद डाउनलोड कर सकते हैं और हेड टीचर की लाइव YouTube क्लासेस सीधे ऐप में देख सकते हैं।";
+        } else if (q.includes("एडमिन") || q.includes("कंट्रोल")) {
+            reply = "ऊपर दाईं ओर 'एडमिन & AI स्टूडियो' बटन दबाकर और 4-अंकों का सुरक्षा PIN डालकर संचालक और हेड टीचर नए बैच जोड़ सकते हैं, छात्रों की अटेंडेंस लगा सकते हैं और AI से वीडियो पब्लिश करवा सकते हैं।";
+        }
+
+        setTimeout(() => {
+            chatBox.innerHTML += `<div class="msg ai">${reply}</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+            speakText(reply);
+            writeSystemLog(`[AI-VOICE] छात्र/क्लाइंट के प्रश्न का उत्तर दिया गया।`);
+        }, 450);
+    }
+
+    function sendTextAI() {
+        const input = document.getElementById('aiTextInput');
+        if (!input.value.trim()) return;
+        processAIResponse(input.value.trim());
+        input.value = "";
+    }
+
+    function startVoiceAI() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            alert("इस मोबाइल वेबव्यू में डायरेक्ट माइक परमिशन उपलब्ध नहीं है। आप ऊपर दिए गए क्विक बटन दबाकर या नीचे लिखकर AI से बोलता हुआ जवाब सुन सकते हैं!");
+            return;
+        }
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'hi-IN';
+        const micBtn = document.getElementById('micBtn');
+
+        recognition.onstart = () => micBtn.classList.add('listening');
+        recognition.onend = () => micBtn.classList.remove('listening');
+        recognition.onerror = () => micBtn.classList.remove('listening');
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            processAIResponse(transcript);
+        };
+        recognition.start();
+    }
+
+    renderStudentCourses();
+    renderPublishedVideos();
+    renderAdminStudents();
+    gpRenderExtraToppers();
+    gpRenderDoubts();
+    gpRenderFeeList();
+    gpRenderReelSchedule();
+</script>
+</body>
+</html>
